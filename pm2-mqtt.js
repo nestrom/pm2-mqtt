@@ -53,14 +53,14 @@ console.log(conf)
   var Probe = pmx.probe();
   var params = {
       uptime : {type:"metric", topic: '$SYS/broker/uptime' , value:0, clean:(data)=>{return data.split(' ')[0]/(60*60)}} ,
-      clientsTotal : {type:"metric", topic: '$SYS/broker/clients/total' , value:0 , clean:(data)=>{return data}},
+      clientsTotal : {type:"histogram", topic: '$SYS/broker/clients/total' , value:0 , clean:(data)=>{return data}},
       clientsMax : {type:"metric", topic: '$SYS/broker/clients/maximum' , value:0 , clean:(data)=>{return data}},
-      clientsConnected : {type:"metric", topic: '$SYS/broker/clients/connected' , value:0 , clean:(data)=>{return data}},
-      messagesStored : {type:"metric", topic: '$SYS/broker/messages/stored' , value:0 , clean:(data)=>{return data}},
-      messagesRecived : {type:"metric", topic: '$SYS/broker/messages/received' , value:0 , clean:(data)=>{return data}},
+      clientsConnected : {type:"histogram", topic: '$SYS/broker/clients/connected' , value:0 , clean:(data)=>{return data}},
+      messagesStored : {type:"histogram", topic: '$SYS/broker/messages/stored' , value:0 , clean:(data)=>{return data}},
+      messagesRecived : {type:"histogram", topic: '$SYS/broker/messages/received' , value:0 , clean:(data)=>{return data}},
       messagesSent : {type:"metric", topic: '$SYS/broker/messages/sent' , value:0 , clean:(data)=>{return data}},
       retainedMsgsCount : {type:"metric", topic: '$SYS/broker/retained messages/count' , value:0 , clean:(data)=>{return data}},
-      heapCurrent : {type:"metric", topic: '$SYS/broker/heap/current' , value:0 , clean:(data)=>{return data / 1048576}},
+      heapCurrent : {type:"histogram", topic: '$SYS/broker/heap/current' , value:0 , clean:(data)=>{return data / 1048576}},
       heapMaximum : {type:"metric", topic: '$SYS/broker/heap/maximum' , value:0 , clean:(data)=>{return data / 1048576}},
       mbRecived :{type:"metric", topic: '$SYS/broker/bytes/received' , value:0 , clean:(data)=>{return data / 1048576}},
       mbSent : {type:"metric", topic: '$SYS/broker/bytes/sent' , value:0 , clean:(data)=>{return data / 1048576}},
@@ -100,7 +100,14 @@ console.log(conf)
             }
 
             var value = params[key].clean(msg);
-            params[key].probe.set(value);
+            if(params[key].type == "metric")
+            {
+                params[key].probe.set(value);
+            }
+            else if(params[key].type == "histogram")
+            {
+                params[key].probe.update(value);
+            }
         }
     })
 
