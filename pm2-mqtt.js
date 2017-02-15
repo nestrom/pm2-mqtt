@@ -32,7 +32,7 @@ pmx.initModule({
       meta    : true,
 
       // Custom metrics to put in BIG
-      main_probes : ['Clients Max','clientsConnected','messagesSent','messagesRecived','heapCurrent','messagesStored']
+      main_probes : ['clientsMax','clientsConnected','messagesSent','messagesRecived','heapCurrent','messagesStored']
     }
 
   }
@@ -65,10 +65,10 @@ pmx.initModule({
       messagesRecived : {name:"Messages Received", type:"histogram", topic: '$SYS/broker/messages/received' , value:0 , clean:(data)=>{return data}},
       messagesSent : {name:"Messages Sent", type:"metric", topic: '$SYS/broker/messages/sent' , value:0 , clean:(data)=>{return data}},
       retainedMsgsCount : {name:"Retained Messages", type:"metric", topic: '$SYS/broker/retained messages/count' , value:0 , clean:(data)=>{return data}},
-      heapCurrent : {name:"Current Heap", type:"histogram", topic: '$SYS/broker/heap/current' , value:0 , clean:(data)=>{return (parseFloat(data) / 1048576).toFixed(2)}},
-      heapMaximum : {name:"Max. Heap", type:"metric", topic: '$SYS/broker/heap/maximum' , value:0 , clean:(data)=>{return (parseFloat(data) / 1048576).toFixed(2)}},
-      mbRecived :{name:"MBs Received", type:"metric", topic: '$SYS/broker/bytes/received' , value:0 , clean:(data)=>{return (parseFloat(data) / 1048576).toFixed(2)}},
-      mbSent : {name:"MBs Sent", type:"metric", topic: '$SYS/broker/bytes/sent' , value:0 , clean:(data)=>{return (data / 1048576).toFixed(2)}},
+      heapCurrent : {name:"Current Heap", type:"histogram", topic: '$SYS/broker/heap/current' , value:0 , clean:(data)=>{return (parseFloat(data) / 1048576)}},
+      heapMaximum : {name:"Max. Heap", type:"metric", topic: '$SYS/broker/heap/maximum' , value:0 , clean:(data)=>{return (parseFloat(data) / 1048576)}},
+      mbRecived :{name:"MBs Received", type:"metric", topic: '$SYS/broker/bytes/received' , value:0 , clean:(data)=>{return (parseFloat(data) / 1048576)}},
+      mbSent : {name:"MBs Sent", type:"metric", topic: '$SYS/broker/bytes/sent' , value:0 , clean:(data)=>{return (data / 1048576)}},
       msgRecPer15min : {name:"Received Msgs / 15min", type:"metric", topic: '$SYS/broker/load/messages/received/15min' , value:0 , clean:(data)=>{return data}},
       msgSentPer15min : {name:"Sent Msgs / 15min", type:"metric", topic: '$SYS/broker/load/messages/sent/15min' , value:0 , clean:(data)=>{return data}},
       connectionsPer15min : {name:"Connections / 15min", type:"metric", topic: '$SYS/broker/load/connections/15min' , value:0 , clean:(data)=>{return data}}
@@ -87,7 +87,7 @@ pmx.initModule({
     for (x in params)
     {
         params[x].probe = Probe[params[x].type]({
-            name : x
+            name : params[x].name;
         });
     }
 
