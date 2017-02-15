@@ -38,7 +38,12 @@ pmx.initModule({
   }
 
 }, function(err, conf) {
-console.log(conf)
+
+    conf.host = "mqtt://gpstracker.nestrom.farm";
+    conf.port = "1883";
+    conf.username = "nestrom";
+    conf.password = "apps@Nestrom@2017";
+
   /**
    * Module specifics like connecting to a database and
    * displaying some metrics
@@ -52,7 +57,7 @@ console.log(conf)
    */
   var Probe = pmx.probe();
   var params = {
-      //uptime : {name:"Up Time", type:"metric", topic: '$SYS/broker/uptime' , value:0, clean:(data)=>{return data.split(' ')[0]/(60*60)}} ,
+      uptime : {name:"Up Time", type:"metric", topic: '$SYS/broker/uptime' , value:0, clean:(data)=>{return data.split(' ')[0]/(60*60)}} ,
       clientsTotal : {name:"Clients Total", type:"histogram", topic: '$SYS/broker/clients/total' , value:0 , clean:(data)=>{return data}},
       clientsMax : {name:"Clients Max", type:"metric", topic: '$SYS/broker/clients/maximum' , value:0 , clean:(data)=>{return data}},
       clientsConnected : {name:"Clients Connected", type:"histogram", topic: '$SYS/broker/clients/connected' , value:0 , clean:(data)=>{return data}},
@@ -96,17 +101,18 @@ console.log(conf)
             }
             else
             {
-                msg = parseFloat(message.toString()).toFixed(2);
+                msg = parseFloat( message.toString() );
+
             }
 
             var value = params[key].clean(msg);
             if(params[key].type == "metric")
             {
-                params[key].probe.set(params[key].clean(value));
+                params[key].probe.set(value);
             }
             else if(params[key].type == "histogram")
             {
-                params[key].probe.update(params[key].clean(value));
+                params[key].probe.update(value);
             }
         }
     })
