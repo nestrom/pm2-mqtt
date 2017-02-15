@@ -96,7 +96,7 @@ console.log(conf)
             }
             else
             {
-                msg = parseFloat(message.toString());
+                msg = parseFloat(message.toString()).toFixed(2);
             }
 
             var value = params[key].clean(msg);
