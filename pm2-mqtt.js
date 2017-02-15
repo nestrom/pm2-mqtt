@@ -87,7 +87,7 @@ pmx.initModule({
     for (x in params)
     {
         params[x].probe = Probe[params[x].type]({
-            name : params[x].name;
+            name : params[x].name
         });
     }
 
