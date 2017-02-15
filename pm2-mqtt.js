@@ -32,7 +32,7 @@ pmx.initModule({
       meta    : true,
 
       // Custom metrics to put in BIG
-      main_probes : ['MQTT']
+      main_probes : ['uptime','clientsConnected','messagesSent','messagesRecived','heapCurrent','messagesStored']
     }
 
   }
@@ -52,21 +52,21 @@ console.log(conf)
    */
   var Probe = pmx.probe();
   var params = {
-      uptime : {type:"metric", topic: '$SYS/broker/uptime' , value:0, clean:(data)=>{return data.split(' ')[0]/(60*60)}} ,
-      clientsTotal : {type:"histogram", topic: '$SYS/broker/clients/total' , value:0 , clean:(data)=>{return data}},
-      clientsMax : {type:"metric", topic: '$SYS/broker/clients/maximum' , value:0 , clean:(data)=>{return data}},
-      clientsConnected : {type:"histogram", topic: '$SYS/broker/clients/connected' , value:0 , clean:(data)=>{return data}},
-      messagesStored : {type:"histogram", topic: '$SYS/broker/messages/stored' , value:0 , clean:(data)=>{return data}},
-      messagesRecived : {type:"histogram", topic: '$SYS/broker/messages/received' , value:0 , clean:(data)=>{return data}},
-      messagesSent : {type:"metric", topic: '$SYS/broker/messages/sent' , value:0 , clean:(data)=>{return data}},
-      retainedMsgsCount : {type:"metric", topic: '$SYS/broker/retained messages/count' , value:0 , clean:(data)=>{return data}},
-      heapCurrent : {type:"histogram", topic: '$SYS/broker/heap/current' , value:0 , clean:(data)=>{return (parseFloat(data) / 1048576).toFixed(2)}},
-      heapMaximum : {type:"metric", topic: '$SYS/broker/heap/maximum' , value:0 , clean:(data)=>{return (parseFloat(data) / 1048576).toFixed(2)}},
-      mbRecived :{type:"metric", topic: '$SYS/broker/bytes/received' , value:0 , clean:(data)=>{return (parseFloat(data) / 1048576).toFixed(2)}},
-      mbSent : {type:"metric", topic: '$SYS/broker/bytes/sent' , value:0 , clean:(data)=>{return (data / 1048576).toFixed(2)}},
-      msgRecPer15min : {type:"metric", topic: '$SYS/broker/load/messages/received/15min' , value:0 , clean:(data)=>{return data}},
-      msgSentPer15min : {type:"metric", topic: '$SYS/broker/load/messages/sent/15min' , value:0 , clean:(data)=>{return data}},
-      connectionsPer15min : {type:"metric", topic: '$SYS/broker/load/connections/15min' , value:0 , clean:(data)=>{return data}}
+      uptime : {name:"Up Time", type:"metric", topic: '$SYS/broker/uptime' , value:0, clean:(data)=>{return data.split(' ')[0]/(60*60)}} ,
+      clientsTotal : {name:"Clients Total", type:"histogram", topic: '$SYS/broker/clients/total' , value:0 , clean:(data)=>{return data}},
+      clientsMax : {name:"Clients Max", type:"metric", topic: '$SYS/broker/clients/maximum' , value:0 , clean:(data)=>{return data}},
+      clientsConnected : {name:"Clients Connected", type:"histogram", topic: '$SYS/broker/clients/connected' , value:0 , clean:(data)=>{return data}},
+      messagesStored : {name:"Messages Stored", type:"histogram", topic: '$SYS/broker/messages/stored' , value:0 , clean:(data)=>{return data}},
+      messagesRecived : {name:"Messages Received", type:"histogram", topic: '$SYS/broker/messages/received' , value:0 , clean:(data)=>{return data}},
+      messagesSent : {name:"Messages Sent", type:"metric", topic: '$SYS/broker/messages/sent' , value:0 , clean:(data)=>{return data}},
+      retainedMsgsCount : {name:"Retained Messages", type:"metric", topic: '$SYS/broker/retained messages/count' , value:0 , clean:(data)=>{return data}},
+      heapCurrent : {name:"Current Heap", type:"histogram", topic: '$SYS/broker/heap/current' , value:0 , clean:(data)=>{return (parseFloat(data) / 1048576).toFixed(2)}},
+      heapMaximum : {name:"Max. Heap", type:"metric", topic: '$SYS/broker/heap/maximum' , value:0 , clean:(data)=>{return (parseFloat(data) / 1048576).toFixed(2)}},
+      mbRecived :{name:"MBs Received", type:"metric", topic: '$SYS/broker/bytes/received' , value:0 , clean:(data)=>{return (parseFloat(data) / 1048576).toFixed(2)}},
+      mbSent : {name:"MBs Sent", type:"metric", topic: '$SYS/broker/bytes/sent' , value:0 , clean:(data)=>{return (data / 1048576).toFixed(2)}},
+      msgRecPer15min : {name:"Received Msgs / 15min", type:"metric", topic: '$SYS/broker/load/messages/received/15min' , value:0 , clean:(data)=>{return data}},
+      msgSentPer15min : {name:"Sent Msgs / 15min", type:"metric", topic: '$SYS/broker/load/messages/sent/15min' , value:0 , clean:(data)=>{return data}},
+      connectionsPer15min : {name:"Connections / 15min", type:"metric", topic: '$SYS/broker/load/connections/15min' , value:0 , clean:(data)=>{return data}}
   }
 
     /**
@@ -102,11 +102,11 @@ console.log(conf)
             var value = params[key].clean(msg);
             if(params[key].type == "metric")
             {
-                params[key].probe.set(value);
+                params[key].probe.set(params[key].clean(value));
             }
             else if(params[key].type == "histogram")
             {
-                params[key].probe.update(value);
+                params[key].probe.update(params[key].clean(value));
             }
         }
     })
