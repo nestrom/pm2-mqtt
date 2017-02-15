@@ -32,7 +32,7 @@ pmx.initModule({
       meta    : true,
 
       // Custom metrics to put in BIG
-      main_probes : ['uptime','clientsConnected','messagesSent','messagesRecived','heapCurrent','messagesStored']
+      main_probes : ['Clients Max','clientsConnected','messagesSent','messagesRecived','heapCurrent','messagesStored']
     }
 
   }
@@ -52,7 +52,7 @@ console.log(conf)
    */
   var Probe = pmx.probe();
   var params = {
-      uptime : {name:"Up Time", type:"metric", topic: '$SYS/broker/uptime' , value:0, clean:(data)=>{return data.split(' ')[0]/(60*60)}} ,
+      //uptime : {name:"Up Time", type:"metric", topic: '$SYS/broker/uptime' , value:0, clean:(data)=>{return data.split(' ')[0]/(60*60)}} ,
       clientsTotal : {name:"Clients Total", type:"histogram", topic: '$SYS/broker/clients/total' , value:0 , clean:(data)=>{return data}},
       clientsMax : {name:"Clients Max", type:"metric", topic: '$SYS/broker/clients/maximum' , value:0 , clean:(data)=>{return data}},
       clientsConnected : {name:"Clients Connected", type:"histogram", topic: '$SYS/broker/clients/connected' , value:0 , clean:(data)=>{return data}},
