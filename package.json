@@ -1,6 +1,6 @@
 {
   "name": "pm2-mqtt",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "description": "PM2 module to monitor MQTT server usage.",
   "main": "pm2-mqtt.js",
   "dependencies": {
