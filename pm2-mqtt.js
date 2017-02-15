@@ -57,7 +57,7 @@ pmx.initModule({
    */
   var Probe = pmx.probe();
   var params = {
-      uptime : {name:"Up Time", type:"metric", topic: '$SYS/broker/uptime' , value:0, clean:(data)=>{return round(data.split(' ')[0]/(60*60))}} ,
+      uptime : {name:"Up Time", type:"metric", topic: '$SYS/broker/uptime' , value:0, clean:(data)=>{return round(data.split(' ')[0]/(60*60),2)}} ,
       clientsTotal : {name:"Clients Total", type:"histogram", topic: '$SYS/broker/clients/total' , value:0 , clean:(data)=>{return data}},
       clientsMax : {name:"Clients Max", type:"metric", topic: '$SYS/broker/clients/maximum' , value:0 , clean:(data)=>{return data}},
       clientsConnected : {name:"Clients Connected", type:"histogram", topic: '$SYS/broker/clients/connected' , value:0 , clean:(data)=>{return data}},
@@ -65,10 +65,10 @@ pmx.initModule({
       messagesRecived : {name:"Messages Received", type:"histogram", topic: '$SYS/broker/messages/received' , value:0 , clean:(data)=>{return data}},
       messagesSent : {name:"Messages Sent", type:"metric", topic: '$SYS/broker/messages/sent' , value:0 , clean:(data)=>{return data}},
       retainedMsgsCount : {name:"Retained Messages", type:"metric", topic: '$SYS/broker/retained messages/count' , value:0 , clean:(data)=>{return data}},
-      heapCurrent : {name:"Current Heap", type:"histogram", topic: '$SYS/broker/heap/current' , value:0 , clean:(data)=>{return round(parseFloat(data) / 1048576)}},
-      heapMaximum : {name:"Max. Heap", type:"metric", topic: '$SYS/broker/heap/maximum' , value:0 , clean:(data)=>{return round(parseFloat(data) / 1048576)}},
-      mbRecived :{name:"MBs Received", type:"metric", topic: '$SYS/broker/bytes/received' , value:0 , clean:(data)=>{return round(parseFloat(data) / 1048576)}},
-      mbSent : {name:"MBs Sent", type:"metric", topic: '$SYS/broker/bytes/sent' , value:0 , clean:(data)=>{return round(data / 1048576)}},
+      heapCurrent : {name:"Current Heap", type:"histogram", topic: '$SYS/broker/heap/current' , value:0 , clean:(data)=>{return round(parseFloat(data) / 1048576,2)}},
+      heapMaximum : {name:"Max. Heap", type:"metric", topic: '$SYS/broker/heap/maximum' , value:0 , clean:(data)=>{return round(parseFloat(data) / 1048576,2)}},
+      mbRecived :{name:"MBs Received", type:"metric", topic: '$SYS/broker/bytes/received' , value:0 , clean:(data)=>{return round(parseFloat(data) / 1048576,2)}},
+      mbSent : {name:"MBs Sent", type:"metric", topic: '$SYS/broker/bytes/sent' , value:0 , clean:(data)=>{return round(data / 1048576,2)}},
       msgRecPer15min : {name:"Received Msgs / 15min", type:"metric", topic: '$SYS/broker/load/messages/received/15min' , value:0 , clean:(data)=>{return data}},
       msgSentPer15min : {name:"Sent Msgs / 15min", type:"metric", topic: '$SYS/broker/load/messages/sent/15min' , value:0 , clean:(data)=>{return data}},
       connectionsPer15min : {name:"Connections / 15min", type:"metric", topic: '$SYS/broker/load/connections/15min' , value:0 , clean:(data)=>{return data}}
