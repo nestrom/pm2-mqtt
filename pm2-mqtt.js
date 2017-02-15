@@ -29,7 +29,7 @@ pmx.initModule({
     block : {
       actions : false,
       issues  : true,
-      meta    : true,
+      meta    : false,
 
       // Custom metrics to put in BIG
       main_probes : ['Up Time', 'Clients Max','Clients Connected','Messages Sent','Messages Received','Current Heap','Messages Stored']
